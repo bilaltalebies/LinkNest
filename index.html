@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LinkNest is a personal bookmark manager for saving, organizing, searching, and managing your favorite links." />
+  <meta name="application-name" content="LinkNest" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)" />
+  <meta property="og:title" content="LinkNest — Your personal space for saved links" />
+  <meta property="og:description" content="A personal bookmark manager for saving, organizing, searching, and managing your favorite links." />
+  <meta property="og:type" content="website" />
+  <title>LinkNest — Your personal space for saved links</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content" data-i18n="skip_to_content">Skip to content</a>
+
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+      <div class="sidebar__brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="brand-name">LinkNest</span>
+      </div>
+
+      <nav class="sidebar__nav" aria-label="Main">
+        <ul class="nav-list">
+          <li>
+            <button class="nav-item is-active" type="button" data-view="all" aria-current="page">
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span data-i18n="nav_all_links">All Links</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" type="button" data-view="favorites">
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-i18n="nav_favorites">Favorites</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" type="button" data-view="uncategorized">
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7h-9M14 17H5M17 17h2M7 7H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span data-i18n="nav_uncategorized">Uncategorized</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="nav-section">
+          <div class="nav-section__header">
+            <h2 class="nav-section__title" data-i18n="nav_categories">Categories</h2>
+            <button class="icon-btn icon-btn--ghost icon-btn--sm" type="button" id="add-category-btn" data-i18n-aria="create_category" aria-label="Create a new category">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <ul class="nav-list nav-list--categories" id="category-list"></ul>
+        </div>
+      </nav>
+
+      <div class="sidebar__footer">
+        <span class="sidebar__hint">LinkNest</span>
+      </div>
+    </aside>
+
+    <!-- Mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay" hidden></div>
+
+    <!-- Main -->
+    <div class="main">
+      <!-- Header -->
+      <header class="header">
+        <button class="icon-btn sidebar-toggle" id="sidebar-toggle" type="button" data-i18n-aria="toggle_navigation" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+
+        <h1 class="header__title" id="page-title">All Links</h1>
+        <span class="header__count" id="result-count" aria-live="polite">0 links</span>
+
+        <div class="header__search">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="search" class="search-input" id="search-input" data-i18n-placeholder="search_placeholder" placeholder="Search links…" data-i18n-aria="search_aria" aria-label="Search links" />
+        </div>
+
+        <button class="btn btn--primary" type="button" id="add-link-btn" data-i18n-aria="add_link_aria" aria-label="Add a new link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span data-i18n="add_link">Add Link</span>
+        </button>
+
+        <button class="icon-btn lang-toggle" type="button" id="lang-toggle" data-i18n-aria="switch_language_aria" aria-label="Switch language">العربية</button>
+
+        <button class="icon-btn theme-toggle" id="theme-toggle" type="button" data-i18n-aria="theme_toggle_aria" aria-label="Toggle color theme" aria-pressed="false">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </header>
+
+      <!-- Content -->
+      <main class="content" id="main-content">
+        <section class="cards-section" aria-labelledby="page-title">
+          <div class="card-grid" id="card-grid"></div>
+        </section>
+
+        <!-- Empty state (reusable) -->
+        <section class="empty-state" id="empty-state" hidden aria-labelledby="empty-title">
+          <div class="empty-state__icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2 class="empty-state__title" id="empty-title" data-i18n="no_links_title">No links yet</h2>
+          <p class="empty-state__text" id="empty-text" data-i18n="no_links_text">Save your first link to see it here. Your personal collection will grow with you.</p>
+          <button class="btn btn--primary" type="button" id="empty-add-btn" data-i18n-aria="add_link_aria" aria-label="Add your first link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span data-i18n="empty_add_first">Add your first link</span>
+          </button>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bookmark modal -->
+  <dialog class="modal" id="bookmark-modal" aria-labelledby="bookmark-modal-title">
+    <form class="modal__form" id="bookmark-form" novalidate>
+      <div class="modal__header">
+        <h2 class="modal__title" id="bookmark-modal-title" data-i18n="modal_add_link">Add Link</h2>
+        <button class="icon-btn icon-btn--ghost" type="button" id="bookmark-modal-close" data-i18n-aria="close_dialog_aria" aria-label="Close dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="field-url"><span data-i18n="field_url">Website URL</span> <span class="req">*</span></label>
+        <input class="field__input" type="url" id="field-url" name="url" data-i18n-placeholder="placeholder_url" placeholder="https://example.com" required autocomplete="off" />
+        <div class="field__actions">
+          <button type="button" class="btn btn--ghost btn--sm" id="fetch-details-btn" data-i18n="fetch_details">Fetch details</button>
+          <span class="field__status" id="fetch-status" aria-live="polite"></span>
+        </div>
+        <p class="field__error" id="error-url" role="alert"></p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="field-name"><span data-i18n="field_name">Website name</span> <span class="req">*</span></label>
+        <input class="field__input" type="text" id="field-name" name="name" data-i18n-placeholder="placeholder_name" placeholder="Example Site" required autocomplete="off" />
+        <p class="field__error" id="error-name" role="alert"></p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="field-desc" data-i18n="field_description">Description</label>
+        <textarea class="field__input field__textarea" id="field-desc" name="description" rows="3" data-i18n-placeholder="placeholder_description" placeholder="Short description (optional)"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="field-category" data-i18n="field_category">Category</label>
+        <select class="field__input" id="field-category" name="category"></select>
+      </div>
+
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" id="bookmark-cancel-btn" data-i18n="btn_cancel">Cancel</button>
+        <button class="btn btn--primary" type="submit" id="bookmark-save-btn" data-i18n="btn_save">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Category modal -->
+  <dialog class="modal modal--sm" id="category-modal" aria-labelledby="category-modal-title">
+    <form class="modal__form" id="category-form" novalidate>
+      <div class="modal__header">
+        <h2 class="modal__title" id="category-modal-title" data-i18n="modal_new_category">New Category</h2>
+        <button class="icon-btn icon-btn--ghost" type="button" id="category-modal-close" data-i18n-aria="close_dialog_aria" aria-label="Close dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="field">
+        <label class="field__label" for="field-cat-name"><span data-i18n="field_category_name">Category name</span> <span class="req">*</span></label>
+        <input class="field__input" type="text" id="field-cat-name" name="catname" required autocomplete="off" />
+        <p class="field__error" id="error-cat-name" role="alert"></p>
+      </div>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" id="category-cancel-btn" data-i18n="btn_cancel">Cancel</button>
+        <button class="btn btn--primary" type="submit" id="category-save-btn" data-i18n="btn_save">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <div class="sr-only" id="live-region" aria-live="polite"></div>
+</body>
+</html>
